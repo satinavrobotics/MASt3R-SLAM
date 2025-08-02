@@ -169,8 +169,15 @@ if __name__ == "__main__":
 
     dataset = load_dataset(args.dataset)
     dataset.subsample(config["dataset"]["subsample"])
+    print(f"** Debug: using dataset class → {dataset.__class__.__name__} **")
+    # (if it has an attribute `rgb_files`, show how many it found)
+    if hasattr(dataset, "rgb_files"):
+        print(f"   found {len(dataset.rgb_files)} image files")
+        print("   sample files:", dataset.rgb_files[:2])
+        print("   DEBUG: dataset.get_img_shape() →", dataset.get_img_shape())
+        
     h, w = dataset.get_img_shape()[0]
-
+    
     if args.calib:
         with open(args.calib, "r") as f:
             intrinsics = yaml.load(f, Loader=yaml.SafeLoader)

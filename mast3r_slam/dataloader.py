@@ -40,7 +40,7 @@ class MonocularDataset(torch.utils.data.Dataset):
         return self.timestamps[idx]
 
     def read_img(self, idx):
-        img = cv2.imread(self.rgb_files[idx])
+        img = cv2.imread(str(self.rgb_files[idx]))
         return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     def get_image(self, idx):
@@ -270,7 +270,9 @@ class RGBFiles(MonocularDataset):
         super().__init__()
         self.use_calibration = False
         self.dataset_path = pathlib.Path(dataset_path)
-        self.rgb_files = natsorted(list((self.dataset_path).glob("*.png")))
+        pngs = list(self.dataset_path.glob("*.png"))
+        jpgs = list(self.dataset_path.glob("*.jpg"))
+        self.rgb_files = natsorted(pngs + jpgs)
         self.timestamps = np.arange(0, len(self.rgb_files)).astype(self.dtype) / 30.0
 
 
